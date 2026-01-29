@@ -25,7 +25,8 @@ export default defineConfig({
   ].filter(Boolean),
   server: {
     watch: {
-        ignored: ['**/src/data/**']
+        // We verwijderen de ignore voor src/data zodat Vite de bundel ververst 
+        // wanneer de JSON bestanden worden aangepast via de Dock.
     }
   }
 })

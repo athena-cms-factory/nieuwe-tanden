@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 function Header({ primaryTable, siteSettings = {} }) {
   
   const info = Array.isArray(primaryTable) ? (primaryTable[0] || {}) : (primaryTable || {});
+  const siteName = siteSettings.title || siteSettings.naam || info.site_naam || info.naam || 'Athena';
   
   return (
     <nav 
@@ -16,10 +17,10 @@ function Header({ primaryTable, siteSettings = {} }) {
         {/* Logo / Naam */}
         <Link to="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-serif font-bold text-xl shadow-lg shadow-accent/20 group-hover:scale-110 transition-transform">
-            {info.site_naam?.charAt(0) || info.naam?.charAt(0) || 'A'}
+            {siteName.charAt(0)}
           </div>
           <span className="text-xl font-serif font-bold tracking-tight text-primary">
-            <EditableText value={info.site_naam || info.naam || 'Athena'} cmsBind={{file: 'basisgegevens', index: 0, key: info.site_naam ? 'site_naam' : 'naam'}} />
+            <EditableText value={siteName} cmsBind={{file: 'site_settings', index: 0, key: siteSettings.title ? 'title' : (siteSettings.naam ? 'naam' : 'title')}} />
           </span>
         </Link>
 

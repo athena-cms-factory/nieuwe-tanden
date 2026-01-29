@@ -6,11 +6,13 @@ import EditableText from './EditableText';
 const Section = ({ data }) => {
   
   const sectionOrder = data.section_order || [];
+  const displayConfig = data.display_config || { sections: {} };
 
   
-  const getGoogleSearchUrl = (query) => {
+  const getGoogleSearchUrl = (query, researcher = '') => {
     const context = "tandheelkunde wetenschappelijk onderzoek 2026";
-    return `https://www.google.com/search?q=${encodeURIComponent(query + ' ' + context)}`;
+    const fullQuery = [query, researcher, context].filter(Boolean).join(' ');
+    return `https://www.google.com/search?q=${encodeURIComponent(fullQuery)}`;
   };
 
   useEffect(() => {
@@ -26,28 +28,43 @@ const Section = ({ data }) => {
         if (items.length === 0) return null;
 
         if (sectionName === 'basisgegevens') {
+          const config = displayConfig.sections?.[sectionName] || {};
+          const hiddenFields = config.hidden_fields || [];
+          
           const hero = items[0];
           const heroTitle = hero.titel || hero.hero_header || hero.site_naam;
+          const showTitle = !hiddenFields.includes('titel') && !hiddenFields.includes('hero_header') && !hiddenFields.includes('site_naam');
+          const showSubtitle = !hiddenFields.includes('ondertitel') && !hiddenFields.includes('introductie');
+          const showImage = !hiddenFields.includes('hero_afbeelding') && !hiddenFields.includes('foto_url');
+
           return (
             <section key={idx} data-dock-section="basisgegevens" className="relative h-[85vh] flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 z-0">
-                <EditableMedia src={hero.hero_afbeelding || hero.foto_url} cmsBind={{file: 'basisgegevens', index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url'}} className="w-full h-full object-cover" />
+                {showImage && <EditableMedia src={hero.hero_afbeelding || hero.foto_url} cmsBind={{file: 'basisgegevens', index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url'}} className="w-full h-full object-cover" />}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60"></div>
               </div>
               <div className="relative z-10 text-center px-6 max-w-5xl">
-                <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-                  <EditableText value={heroTitle} cmsBind={{file: 'basisgegevens', index: 0, key: hero.titel ? 'titel' : (hero.hero_header ? 'hero_header' : 'site_naam')}} />
-                </h1>
-                <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
+                {showTitle && (
+                    <>
+                        <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
+                        <EditableText value={heroTitle} cmsBind={{file: 'basisgegevens', index: 0, key: hero.titel ? 'titel' : (hero.hero_header ? 'hero_header' : 'site_naam')}} />
+                        </h1>
+                        <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
+                    </>
+                )}
                 <div className="flex flex-col items-center gap-8">
-                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
-                       <EditableText value={hero.ondertitel || hero.introductie} cmsBind={{file: 'basisgegevens', index: 0, key: hero.ondertitel ? 'ondertitel' : 'introductie'}} />
-                    </p>
+                    {showSubtitle && (
+                        <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
+                        <EditableText value={hero.ondertitel || hero.introductie} cmsBind={{file: 'basisgegevens', index: 0, key: hero.ondertitel ? 'ondertitel' : 'introductie'}} />
+                        </p>
+                    )}
                     
-                    <a href={getGoogleSearchUrl(heroTitle)} target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full backdrop-blur-md transition-all font-bold flex items-center gap-3 group">
-                        <i className="fa-brands fa-google group-hover:text-accent transition-colors"></i>
-                        Zoek meer inzichten
-                    </a>
+                    {showTitle && (
+                        <a href={getGoogleSearchUrl(heroTitle)} target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full backdrop-blur-md transition-all font-bold flex items-center gap-3 group">
+                            <i className="fa-brands fa-google group-hover:text-accent transition-colors"></i>
+                            Zoek meer inzichten
+                        </a>
+                    )}
                 </div>
               </div>
             </section>
@@ -55,6 +72,9 @@ const Section = ({ data }) => {
         }
 
         if (sectionName.includes('product') || sectionName.includes('shop')) {
+          const config = displayConfig.sections?.[sectionName] || {};
+          const hiddenFields = config.hidden_fields || [];
+
           return (
             <section key={idx} data-dock-section={sectionName} className="py-24 px-6 bg-background">
               <div className="max-w-7xl mx-auto">
@@ -62,25 +82,33 @@ const Section = ({ data }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                   {items.map((item, index) => {
                     const priceValue = parseFloat(String(item.prijs || 0).replace(/[^0-9.,]/g, '').replace(',', '.'));
-                    const titleKey = Object.keys(item).find(k => /naam|titel/i.test(k)) || 'naam';
-                    const imgKey = Object.keys(item).find(k => /foto|afbeelding|url/i.test(k)) || 'product_foto_url';
+                    const titleKey = Object.keys(item).find(k => /naam|titel/i.test(k) && !hiddenFields.includes(k));
+                    const imgKey = Object.keys(item).find(k => /foto|afbeelding|url/i.test(k) && !hiddenFields.includes(k));
+                    const showPrice = !hiddenFields.includes('prijs');
+
                     return (
                       <article key={index} className="flex flex-col bg-surface rounded-[2.5rem] shadow-xl overflow-hidden transition-all hover:-translate-y-2 hover:shadow-2xl group border border-slate-100">
-                        <div className="aspect-square overflow-hidden flex-shrink-0 relative">
-                          <EditableMedia src={item[imgKey]} cmsBind={{file: sectionName, index, key: imgKey}} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                          <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
-                        </div>
+                        {imgKey && (
+                            <div className="aspect-square overflow-hidden flex-shrink-0 relative">
+                                <EditableMedia src={item[imgKey]} cmsBind={{file: sectionName, index, key: imgKey}} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
+                            </div>
+                        )}
                         <div className="p-8 flex flex-col flex-grow text-center">
-                          <h3 className="text-2xl font-bold mb-4 text-primary min-h-[4rem] flex items-center justify-center">
-                            <EditableText value={item[titleKey]} cmsBind={{file: sectionName, index, key: titleKey}} />
-                          </h3>
-                          <div className="text-accent font-bold mt-auto text-3xl mb-6">€{priceValue.toFixed(2)}</div>
+                          {titleKey && (
+                            <h3 className="text-2xl font-bold mb-4 text-primary min-h-[4rem] flex items-center justify-center">
+                                <EditableText value={item[titleKey]} cmsBind={{file: sectionName, index, key: titleKey}} />
+                            </h3>
+                          )}
+                          {showPrice && <div className="text-accent font-bold mt-auto text-3xl mb-6">€{priceValue.toFixed(2)}</div>}
                           <div className="flex flex-col gap-3">
                             
                             
-                            <a href={getGoogleSearchUrl(item[titleKey])} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary transition-colors text-sm flex items-center justify-center gap-2">
-                                <i className="fa-brands fa-google text-xs"></i> Zoek details
-                            </a>
+                            {titleKey && (
+                                <a href={getGoogleSearchUrl(item[titleKey])} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary transition-colors text-sm flex items-center justify-center gap-2">
+                                    <i className="fa-brands fa-google text-xs"></i> Zoek details
+                                </a>
+                            )}
                           </div>
                         </div>
                       </article>
@@ -104,9 +132,13 @@ const Section = ({ data }) => {
               
               <div className="space-y-20">
                 {items.map((item, index) => {
-                   const titleKey = Object.keys(item).find(k => /naam|titel|onderwerp|header/i.test(k));
-                   const textKeys = Object.keys(item).filter(k => k !== titleKey && !/foto|afbeelding|url|link|id/i.test(k));
-                   const imgKey = Object.keys(item).find(k => /foto|afbeelding|url/i.test(k));
+                   const config = displayConfig.sections?.[sectionName] || {};
+                   const hiddenFields = config.hidden_fields || [];
+
+                   const titleKey = Object.keys(item).find(k => /naam|titel|onderwerp|header/i.test(k) && !hiddenFields.includes(k));
+                   const researcherKey = Object.keys(item).find(k => /onderzoeker|auteur|expert/i.test(k) && !hiddenFields.includes(k));
+                   const textKeys = Object.keys(item).filter(k => k !== titleKey && k !== researcherKey && !/foto|afbeelding|url|link|id/i.test(k) && !hiddenFields.includes(k));
+                   const imgKey = Object.keys(item).find(k => /foto|afbeelding|url/i.test(k) && !hiddenFields.includes(k));
                    const isEven = index % 2 === 0;
 
                    return (
@@ -123,10 +155,15 @@ const Section = ({ data }) => {
                                  <EditableText value={item[titleKey]} cmsBind={{file: sectionName, index, key: titleKey}} />
                                </h3>
                                
-                               <a href={getGoogleSearchUrl(item[titleKey])} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2 rounded-full transition-all text-sm font-bold self-start md:self-center">
+                               <a href={getGoogleSearchUrl(item[titleKey], item[researcherKey])} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2 rounded-full transition-all text-sm font-bold self-start md:self-center">
                                   <i className="fa-brands fa-google text-accent"></i> Zoek bronnen
                                </a>
                            </div>
+                         )}
+                         {researcherKey && item[researcherKey] && (
+                            <div className="mb-4 text-accent font-bold font-serif italic">
+                               — <EditableText value={item[researcherKey]} cmsBind={{file: sectionName, index, key: researcherKey}} />
+                            </div>
                          )}
                          {textKeys.map(tk => (
                            <div key={tk} className="text-xl leading-relaxed text-slate-600 mb-6 font-light">

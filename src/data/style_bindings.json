@@ -1,1 +1,16 @@
-{}
+{
+  "basisgegevens:0:titel": {
+    "bold": false,
+    "italic": false,
+    "fontSize": "16px",
+    "textAlign": "left",
+    "fontFamily": "sans-serif"
+  },
+  "basisgegevens:0:naam": {
+    "bold": false,
+    "italic": false,
+    "fontSize": "16px",
+    "textAlign": "left",
+    "fontFamily": "sans-serif"
+  }
+}
