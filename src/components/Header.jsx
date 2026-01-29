@@ -1,10 +1,10 @@
 import React from 'react';
 import EditableText from './EditableText';
-import { useCart } from './CartContext';
+
 import { Link } from 'react-router-dom';
 
 function Header({ primaryTable, siteSettings = {} }) {
-  const cartContext = useCart ? useCart() : null;
+  
   const info = Array.isArray(primaryTable) ? (primaryTable[0] || {}) : (primaryTable || {});
   
   return (
@@ -25,19 +25,7 @@ function Header({ primaryTable, siteSettings = {} }) {
 
         {/* Navigatie & Cart */}
         <div className="flex items-center gap-8">
-          {cartContext && (
-            <button 
-              onClick={() => cartContext.setIsCartOpen(true)}
-              className="relative p-2 hover:bg-slate-50 rounded-full transition-colors group"
-            >
-              <i className="fa-solid fa-cart-shopping text-xl text-primary group-hover:text-accent transition-colors"></i>
-              {cartContext.cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
-                  {cartContext.cartCount}
-                </span>
-              )}
-            </button>
-          )}
+          {}
         </div>
       </div>
     </nav>

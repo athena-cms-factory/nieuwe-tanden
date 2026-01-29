@@ -1,1 +1,27 @@
-[]
+[
+  {
+    "naam": "Paul Ehrlich",
+    "instituut": "Stanford University",
+    "expertise": "Bevolkingsstudies en kaakepidemiologie"
+  },
+  {
+    "naam": "Robert Sapolsky",
+    "instituut": "Stanford University",
+    "expertise": "Neurobiologie van stress"
+  },
+  {
+    "naam": "Marcus Feldman",
+    "instituut": "Stanford University",
+    "expertise": "Populatiegenetica"
+  },
+  {
+    "naam": "Xuechen Zhang",
+    "instituut": "King's College London",
+    "expertise": "Regeneratieve tandheelkunde"
+  },
+  {
+    "naam": "Katsu Takahashi",
+    "instituut": "Kyoto University",
+    "expertise": "USAG-1-gerelateerde tandregeneratie"
+  }
+]

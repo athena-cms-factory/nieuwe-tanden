@@ -9,6 +9,7 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^6.20.0",
     "csvtojson": "^2.0.10",
     "@heroicons/react": "^2.2.0"
   },
