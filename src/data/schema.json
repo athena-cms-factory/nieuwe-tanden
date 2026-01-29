@@ -1,6 +1,10 @@
 {
   "blueprint_name": "science-article-type",
   "track": "docked",
+  "features": {
+    "google_search_links": true,
+    "search_context": "tandheelkunde wetenschappelijk onderzoek 2026"
+  },
   "data_structure": [
     {
       "table_name": "basisgegevens",

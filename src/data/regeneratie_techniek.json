@@ -1,14 +1,14 @@
 [
   {
-    "onderwerp": "TRG-035",
-    "beschrijving": "Monoklonaal antilichaam dat USAG-1 remt, waardoor slapende tandknoppen worden geactiveerd voor natuurlijke tandregeneratie.",
-    "status": "Fase I klinische tests bij mensen (2025)",
-    "tijdlijn": "Verwachte beschikbaarheid 2030"
+    "onderwerp": "TRG-035 (USAG-1 remmer)",
+    "beschrijving": "Deze intraveneuze medicatie neutraliseert het USAG-1 eiwit dat tandknopontwikkeling remt. Door deze blokkade kunnen slapende tandkiemen worden geactiveerd om volledig nieuwe, functionele tanden te vormen met natuurlijke wortelstructuur.",
+    "status": "Fase I klinische tests bij volwassenen",
+    "tijdlijn": "2030 (verwachte beschikbaarheid)"
   },
   {
     "onderwerp": "Tideglusib",
-    "beschrijving": "GSK-3-remmer die Wnt/β-catenine-signalering activeert, stimuleert tandpulpa-stamcellen om nieuw dentine te vormen.",
-    "status": "Preklinische studies",
-    "tijdlijn": ""
+    "beschrijving": "Oorspronkelijk ontwikkeld voor Alzheimer, stimuleert dit middel dentine-aanmaak via Wnt/β-catenin signaalroute-activering. Het ondersteunt natuurlijke tandherstelmechanismen door pulpa-stamcellen te differentiëren in dentineproducerende cellen.",
+    "status": "Preklinische studies met diermodellen",
+    "tijdlijn": "2026-2027 (verwachte eerste klinische trials)"
   }
 ]

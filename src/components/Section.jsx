@@ -2,8 +2,16 @@ import React, { useEffect } from 'react';
 import EditableMedia from './EditableMedia';
 import EditableText from './EditableText';
 
+
 const Section = ({ data }) => {
+  
   const sectionOrder = data.section_order || [];
+
+  
+  const getGoogleSearchUrl = (query) => {
+    const context = "tandheelkunde wetenschappelijk onderzoek 2026";
+    return `https://www.google.com/search?q=${encodeURIComponent(query + ' ' + context)}`;
+  };
 
   useEffect(() => {
     if (window.athenaScan) {
@@ -17,14 +25,35 @@ const Section = ({ data }) => {
         const items = data[sectionName] || [];
         if (items.length === 0) return null;
 
-        // --- HERO / BASISGEGEVENS ---
         if (sectionName === 'basisgegevens') {
           const hero = items[0];
+          const heroTitle = hero.titel || hero.hero_header || hero.site_naam;
           return (
-            <section key={idx} data-dock-section="basisgegevens" className="relative h-[85vh] flex items-center justify-center overflow-hidden">              <div className="absolute inset-0 z-0">                <EditableMedia src={hero.hero_afbeelding || hero.foto_url} cmsBind={{file: 'basisgegevens', index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url'}} className="w-full h-full object-cover" />                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60"></div>              </div>              <div className="relative z-10 text-center px-6 max-w-5xl">                <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">                  <EditableText value={hero.titel || hero.hero_header || hero.site_naam} cmsBind={{file: 'basisgegevens', index: 0, key: hero.titel ? 'titel' : (hero.hero_header ? 'hero_header' : 'site_naam')}} />                </h1>                <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>                <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">                   <EditableText value={hero.ondertitel || hero.introductie} cmsBind={{file: 'basisgegevens', index: 0, key: hero.ondertitel ? 'ondertitel' : 'introductie'}} />                </p>              </div>            </section>          );
+            <section key={idx} data-dock-section="basisgegevens" className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+              <div className="absolute inset-0 z-0">
+                <EditableMedia src={hero.hero_afbeelding || hero.foto_url} cmsBind={{file: 'basisgegevens', index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url'}} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60"></div>
+              </div>
+              <div className="relative z-10 text-center px-6 max-w-5xl">
+                <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
+                  <EditableText value={heroTitle} cmsBind={{file: 'basisgegevens', index: 0, key: hero.titel ? 'titel' : (hero.hero_header ? 'hero_header' : 'site_naam')}} />
+                </h1>
+                <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
+                <div className="flex flex-col items-center gap-8">
+                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
+                       <EditableText value={hero.ondertitel || hero.introductie} cmsBind={{file: 'basisgegevens', index: 0, key: hero.ondertitel ? 'ondertitel' : 'introductie'}} />
+                    </p>
+                    
+                    <a href={getGoogleSearchUrl(heroTitle)} target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full backdrop-blur-md transition-all font-bold flex items-center gap-3 group">
+                        <i className="fa-brands fa-google group-hover:text-accent transition-colors"></i>
+                        Zoek meer inzichten
+                    </a>
+                </div>
+              </div>
+            </section>
+          );
         }
 
-        // --- PRODUCTEN / SHOP ---
         if (sectionName.includes('product') || sectionName.includes('shop')) {
           return (
             <section key={idx} data-dock-section={sectionName} className="py-24 px-6 bg-background">
@@ -46,7 +75,13 @@ const Section = ({ data }) => {
                             <EditableText value={item[titleKey]} cmsBind={{file: sectionName, index, key: titleKey}} />
                           </h3>
                           <div className="text-accent font-bold mt-auto text-3xl mb-6">€{priceValue.toFixed(2)}</div>
-                          
+                          <div className="flex flex-col gap-3">
+                            
+                            
+                            <a href={getGoogleSearchUrl(item[titleKey])} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-primary transition-colors text-sm flex items-center justify-center gap-2">
+                                <i className="fa-brands fa-google text-xs"></i> Zoek details
+                            </a>
+                          </div>
                         </div>
                       </article>
                     );
@@ -57,10 +92,9 @@ const Section = ({ data }) => {
           );
         }
 
-        // --- GENERIEKE ARTIKEL / CONTENT SECTIE ---
         return (
           <section key={idx} data-dock-section={sectionName} className={'py-24 px-6 ' + (idx % 2 === 1 ? 'bg-slate-50' : 'bg-white')}>
-              <div className="max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               <div className="flex flex-col items-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary text-center mb-4 capitalize">
                   {sectionName.replace(/_/g, ' ')}
@@ -84,9 +118,15 @@ const Section = ({ data }) => {
                        )}
                        <div className="flex-1 text-center md:text-left">
                          {titleKey && (
-                           <h3 className="text-3xl font-serif font-bold mb-8 text-primary leading-tight">
-                             <EditableText value={item[titleKey]} cmsBind={{file: sectionName, index, key: titleKey}} />
-                           </h3>
+                           <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8">
+                               <h3 className="text-3xl font-serif font-bold text-primary leading-tight flex-1">
+                                 <EditableText value={item[titleKey]} cmsBind={{file: sectionName, index, key: titleKey}} />
+                               </h3>
+                               
+                               <a href={getGoogleSearchUrl(item[titleKey])} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2 rounded-full transition-all text-sm font-bold self-start md:self-center">
+                                  <i className="fa-brands fa-google text-accent"></i> Zoek bronnen
+                               </a>
+                           </div>
                          )}
                          {textKeys.map(tk => (
                            <div key={tk} className="text-xl leading-relaxed text-slate-600 mb-6 font-light">
