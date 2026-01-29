@@ -1,3 +1,10 @@
 {
-  "sections": {}
+  "sections": {
+    "basisgegevens": {
+      "visible_fields": [],
+      "hidden_fields": [
+        "ondertitel"
+      ]
+    }
+  }
 }

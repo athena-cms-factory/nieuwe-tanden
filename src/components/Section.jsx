@@ -12,7 +12,8 @@ const Section = ({ data }) => {
   const getGoogleSearchUrl = (query, researcher = '') => {
     const context = "tandheelkunde wetenschappelijk onderzoek 2026";
     const fullQuery = [query, researcher, context].filter(Boolean).join(' ');
-    return `https://www.google.com/search?q=${encodeURIComponent(fullQuery)}`;
+    // udm=50 forceert de AI/SGE modus voor diepere inzichten bij complexe vragen
+    return `https://www.google.com/search?q=${encodeURIComponent(fullQuery)}&udm=50`;
   };
 
   useEffect(() => {

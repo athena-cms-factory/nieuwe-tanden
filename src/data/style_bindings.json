@@ -12,5 +12,19 @@
     "fontSize": "16px",
     "textAlign": "left",
     "fontFamily": "sans-serif"
+  },
+  "site_settings:0:title": {
+    "bold": false,
+    "italic": false,
+    "fontSize": "16px",
+    "textAlign": "left",
+    "fontFamily": "sans-serif"
+  },
+  "basisgegevens:0:ondertitel": {
+    "bold": false,
+    "italic": false,
+    "fontSize": "16px",
+    "textAlign": "left",
+    "fontFamily": "sans-serif"
   }
 }
