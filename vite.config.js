@@ -17,7 +17,7 @@ if (fs.existsSync(pluginPath)) {
 }
 
 export default defineConfig({
-  base: '/nieuwe-tanden/', 
+  base: process.env.NODE_ENV === 'production' ? '/nieuwe-tanden/' : '/', 
   plugins: [
     react(),
     tailwindcss(),
