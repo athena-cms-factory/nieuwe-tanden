@@ -119,6 +119,7 @@
 
         // Text Update (Live Preview)
         if (type === 'DOCK_UPDATE_TEXT') {
+            const { formatting } = event.data;
             const bindStr = JSON.stringify({ file, index, key });
             const elements = document.querySelectorAll(`[data-dock-bind='${bindStr}']`);
             const baseUrl = import.meta.env.BASE_URL || '/';
@@ -143,6 +144,16 @@
                     }
                 } else {
                     el.innerText = value || "";
+                    
+                    // Apply live formatting if provided
+                    if (formatting) {
+                        el.style.fontWeight = formatting.bold ? 'bold' : 'normal';
+                        el.style.fontStyle = formatting.italic ? 'italic' : 'normal';
+                        el.style.fontSize = formatting.fontSize;
+                        el.style.textAlign = formatting.textAlign;
+                        el.style.fontFamily = formatting.fontFamily === 'inherit' ? 'inherit' : formatting.fontFamily;
+                        el.style.textShadow = formatting.textShadow ? '2px 1px 1px rgba(0, 0, 0, 1)' : 'none';
+                    }
                 }
             });
         }
@@ -243,6 +254,14 @@
                 type: 'SITE_CLICK',
                 binding: JSON.parse(target.getAttribute('data-dock-bind')),
                 currentValue: currentValue || "",
+                currentFormatting: {
+                    bold: window.getComputedStyle(target).fontWeight === '700' || window.getComputedStyle(target).fontWeight === 'bold',
+                    italic: window.getComputedStyle(target).fontStyle === 'italic',
+                    fontSize: window.getComputedStyle(target).fontSize,
+                    textAlign: window.getComputedStyle(target).textAlign,
+                    fontFamily: window.getComputedStyle(target).fontFamily.split(',')[0].replace(/['"]/g, ''),
+                    textShadow: window.getComputedStyle(target).textShadow !== 'none'
+                },
                 tagName: target.tagName
             }, '*');
         }
