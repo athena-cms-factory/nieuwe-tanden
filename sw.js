@@ -1,4 +1,5 @@
-const CACHE_NAME = 'athena-cache-v' + Date.now(); 
+const CACHE_NAME = 'athena-cache-v7.6.5-' + Date.now(); 
+// Build timestamp: 2026-02-01T15:00:00Z
 
 // We cache ONLY the essential icons and manifest.
 // The main logic and data should come from the network first.
