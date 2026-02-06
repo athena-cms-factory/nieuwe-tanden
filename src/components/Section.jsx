@@ -43,9 +43,9 @@ const Section = ({ data }) => {
           const showImage = !hiddenFields.includes('hero_afbeelding') && !hiddenFields.includes('foto_url');
 
           return (
-            <section key={idx} data-dock-section="basisgegevens" className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+            <section key={idx} data-dock-section="basisgegevens" className="relative w-full h-auto min-h-[var(--hero-height,85vh)] max-h-[var(--hero-max-height,150vh)] aspect-[var(--hero-aspect-ratio,16/9)] flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 z-0">
-                {showImage && <EditableMedia src={hero.hero_afbeelding || hero.foto_url} cmsBind={{file: 'basisgegevens', index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url'}} className="w-full h-full object-cover" />}
+                {showImage && <EditableMedia src={hero.hero_afbeelding || hero.foto_url} cmsBind={{file: 'basisgegevens', index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url'}} className="w-full h-full object-cover object-top" />}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/60"></div>
               </div>
               <div className="relative z-10 text-center px-6 max-w-5xl">

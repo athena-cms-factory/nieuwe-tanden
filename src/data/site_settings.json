@@ -8,5 +8,8 @@
   "light_button_color": "#1561e5",
   "hero_overlay_opacity": "0.26",
   "light_accent_color": "#6663fd",
-  "light_text_color": "#3d6bd6"
+  "light_text_color": "#3d6bd6",
+  "hero_height": "85vh",
+  "hero_max_height": "150vh",
+  "hero_aspect_ratio": "16/9"
 }
