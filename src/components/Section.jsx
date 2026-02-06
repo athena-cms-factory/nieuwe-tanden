@@ -139,7 +139,7 @@ const Section = ({ data }) => {
         const displayTitle = sectionSetting?.title || sectionName.replace(/_/g, ' ');
 
         return (
-          <section key={idx} data-dock-section={sectionName} className={'py-24 px-6 '} style={{ backgroundColor: idx % 2 === 1 ? 'var(--color-surface)' : 'var(--color-background)' }}>
+          <section key={idx} id={sectionName} data-dock-section={sectionName} className={'py-24 px-6 '} style={{ backgroundColor: idx % 2 === 1 ? 'var(--color-surface)' : 'var(--color-background)' }}>
             <div className="max-w-6xl mx-auto">
               <div className="flex flex-col items-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary text-center mb-4 capitalize">
