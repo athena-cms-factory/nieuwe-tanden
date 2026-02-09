@@ -230,17 +230,30 @@
     document.addEventListener('click', (e) => {
         const target = e.target.closest('[data-dock-bind]');
         if (target && window.parent !== window) {
+            if (e.shiftKey) return;
+
             e.preventDefault();
             e.stopPropagation();
 
-            // Extract current value smartly
+            const binding = JSON.parse(target.getAttribute('data-dock-bind'));
+            const dockType = target.getAttribute('data-dock-type') || (
+                (binding.key && (binding.key.toLowerCase().includes('foto') || 
+                                 binding.key.toLowerCase().includes('image') || 
+                                 binding.key.toLowerCase().includes('img') || 
+                                 binding.key.toLowerCase().includes('afbeelding') || 
+                                 binding.key.toLowerCase().includes('video'))) ? 'media' : 'text'
+            );
+
             let currentValue = target.getAttribute('data-dock-current') || target.innerText;
             
-            // Fallback for direct <img> or container with <img>
-            if (!currentValue) {
+            if (dockType === 'link') {
+                currentValue = {
+                    label: target.getAttribute('data-dock-label') || target.innerText,
+                    url: target.getAttribute('data-dock-url') || ""
+                };
+            } else if (!currentValue || dockType === 'media') {
                 const img = target.tagName === 'IMG' ? target : target.querySelector('img');
                 if (img) {
-                    // Try to get the relative filename from the absolute src
                     const src = img.getAttribute('src');
                     if (src && src.includes('/images/')) {
                         currentValue = src.split('/images/').pop().split('?')[0];
@@ -252,17 +265,10 @@
 
             window.parent.postMessage({
                 type: 'SITE_CLICK',
-                binding: JSON.parse(target.getAttribute('data-dock-bind')),
+                binding: binding,
                 currentValue: currentValue || "",
-                currentFormatting: {
-                    bold: window.getComputedStyle(target).fontWeight === '700' || window.getComputedStyle(target).fontWeight === 'bold',
-                    italic: window.getComputedStyle(target).fontStyle === 'italic',
-                    fontSize: window.getComputedStyle(target).fontSize,
-                    textAlign: window.getComputedStyle(target).textAlign,
-                    fontFamily: window.getComputedStyle(target).fontFamily.split(',')[0].replace(/['"]/g, ''),
-                    textShadow: window.getComputedStyle(target).textShadow !== 'none'
-                },
-                tagName: target.tagName
+                tagName: target.tagName,
+                dockType: dockType
             }, '*');
         }
     }, true);
