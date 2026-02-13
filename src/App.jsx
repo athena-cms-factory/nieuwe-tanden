@@ -1,3 +1,4 @@
+import StyleInjector from './components/StyleInjector';
 import React, { useMemo, useEffect, useLayoutEffect } from 'react';
 import { HashRouter as Router } from 'react-router-dom';
 
@@ -83,6 +84,7 @@ const App = ({ data }) => {
   const content = (
     <Router>
       <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)]">
+      <StyleInjector siteSettings={data['site_settings']} />
         <Header primaryTable={primaryTableData} tableName={primaryTableKey} siteSettings={data['site_settings']} />
         
         <main>
